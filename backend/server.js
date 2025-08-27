@@ -29,17 +29,20 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize database
-const { initializeDatabase } = require('./utils/database');
+// Middleware de autenticación (token JWT, etc) - se usa global o en rutas específicas
+const authenticateToken = require('./middleware/auth');
+app.use(authenticateToken); // aplica middleware globalmente (ajusta si no quieres eso)
 
-// Routes
-app.use('/api/auth', require('./middleware/auth'));
-app.use('/api/affiliates', require('./api/affiliates'));
-app.use('/api/campaigns', require('./api/campaigns'));
-app.use('/api/tracking', require('./api/tracking'));
-app.use('/api/stats', require('./api/stats'));
+// Rutas API
+app.use('/api/auth', require('./api/auth'));             // Rutas de login, registro etc
+app.use('/api/affiliates', authenticateToken, require('./api/affiliates'));
+app.use('/api/campaigns', authenticateToken, require('./api/campaigns'));
+app.use('/api/tracking', require('./api/tracking'));     // Tracking puede ser público, sin JWT
+app.use('/api/stats', authenticateToken, require('./api/stats'));
 
-// Migration and seed endpoints (for initial setup)
+// Migration and seed endpoints (para setup inicial)
+const { initializeDatabase, seedDatabase } = require('./utils/database');
+
 app.get('/api/migrate', async (req, res) => {
   try {
     await initializeDatabase();
@@ -52,7 +55,6 @@ app.get('/api/migrate', async (req, res) => {
 
 app.get('/api/seed', async (req, res) => {
   try {
-    const { seedDatabase } = require('./utils/database');
     await seedDatabase();
     res.json({ message: '🌱 Database seeded successfully!' });
   } catch (error) {
@@ -101,6 +103,5 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`🔥 RebelsRev API running on port ${PORT}`);
   });
 }
-
 
 module.exports = app;
