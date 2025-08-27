@@ -367,6 +367,12 @@ const seedDatabase = async () => {
     throw error;
   }
 };
+try {
+  require('pg');
+  console.log('✅ pg module loaded');
+} catch (e) {
+  console.error('❌ pg module is missing');
+}
 
 module.exports = {
   sequelize,
@@ -376,4 +382,5 @@ module.exports = {
   Click,
   initializeDatabase,
   seedDatabase
+
 };
