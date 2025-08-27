@@ -1,9 +1,13 @@
 const express = require('express');
-const db = require('../utils/database');
+const { sequelize } = require('../utils/database');
 const authenticateToken = require('../middleware/auth');
 const router = express.Router();
 
-const Campaign = db.Campaign;
+const Campaign = sequelize.models.Campaign;
+
+if (!Campaign) {
+  console.error('❌ Campaign model is undefined! Check your database.js exports and imports.');
+}
 
 router.get('/', authenticateToken, async (req, res) => {
   try {
