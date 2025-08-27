@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 RebelsRev Network - Red de Afiliados Revolucionaria</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-color-scheme="dark">
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card card">
+            <div class="login-header">
+                <h1 class="rebels-logo">🔥 RebelsRev</h1>
+                <p class="rebels-tagline">Red de Afiliados Revolucionaria</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label class="form-label">Usuario o Email</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="Ingresa tu usuario">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="Ingresa tu contraseña">
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width">Iniciar Revolución</button>
+            </form>
+            <div class="login-demo">
+                <p>Cuentas de demo:</p>
+                <button class="btn btn--secondary btn--sm" onclick="loginAs('admin')">Admin Rebel</button>
+                <button class="btn btn--secondary btn--sm" onclick="loginAs('rebel_carlos')">Rebel Carlos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app hidden">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 class="rebels-logo">🔥 RebelsRev</h2>
+                <span class="user-role" id="user-role-badge"></span>
+            </div>
+            <ul class="sidebar-nav" id="sidebar-nav">
+                <!-- Navigation items populated by JS -->
+            </ul>
+            <div class="sidebar-footer">
+                <button class="btn btn--secondary btn--sm" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="btn btn--ghost btn--sm" onclick="toggleSidebar()">☰</button>
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+                <div class="topbar-right">
+                    <span id="user-info"></span>
+                    <div class="user-avatar">👤</div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content" id="page-content">
+                <!-- Content populated by JS -->
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

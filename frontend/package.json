@@ -1,0 +1,14 @@
+{
+  "name": "rebelsrev-frontend",
+  "version": "1.0.0",
+  "description": "RebelsRev Network - Revolutionary Affiliate Network Frontend",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static build ready'",
+    "start": "serve -s . -l 3000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
