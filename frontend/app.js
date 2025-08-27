@@ -3,7 +3,7 @@ class RebelsRevState {
     constructor() {
         this.currentUser = null;
         this.currentPage = 'dashboard';
-        this.apiUrl = 'https://tu-backend.vercel.app/api'; // CAMBIAR POR TU URL DE BACKEND
+        this.apiUrl = 'rebelsrevnetworkbackend.vercel.app'; // CAMBIAR POR TU URL DE BACKEND
         this.data = this.initializeRebelData();
     }
 
