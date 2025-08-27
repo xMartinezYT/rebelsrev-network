@@ -6,11 +6,8 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware de seguridad
-app.use(helmet({
-  contentSecurityPolicy: false
-}));
-
+// Seguridad
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({
   origin: '*',
   credentials: true,
@@ -18,33 +15,20 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
-});
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use(limiter);
 
-// Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware de autenticación (token JWT, etc) - definido y aplicado solo donde es necesario
 const authenticateToken = require('./middleware/auth');
 
-// Rutas API
-// Ruta pública (login, registro)
 app.use('/api/auth', require('./api/auth'));
-
-// Rutas protegidas con middleware de autenticación
 app.use('/api/affiliates', authenticateToken, require('./api/affiliates'));
 app.use('/api/campaigns', authenticateToken, require('./api/campaigns'));
+app.use('/api/tracking', require('./api/tracking'));
 app.use('/api/stats', authenticateToken, require('./api/stats'));
 
-// Ruta pública para tracking
-app.use('/api/tracking', require('./api/tracking'));
-
-// Migration and seed endpoints (para setup inicial)
 const { initializeDatabase, seedDatabase } = require('./utils/database');
 
 app.get('/api/migrate', async (req, res) => {
@@ -67,45 +51,26 @@ app.get('/api/seed', async (req, res) => {
   }
 });
 
-// Health check
 app.get('/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    message: '🔥 RebelsRev API is running!',
-    timestamp: new Date().toISOString()
-  });
+  res.json({ status: 'OK', message: '🔥 RebelsRev API is running!', timestamp: new Date().toISOString() });
 });
 
-// Root endpoint
 app.get('/', (req, res) => {
-  res.json({
-    message: '🔥 RebelsRev Network API',
-    version: '1.0.0',
-    status: 'Revolutionary!'
-  });
+  res.json({ message: '🔥 RebelsRev Network API', version: '1.0.0', status: 'Revolutionary!' });
 });
 
-// Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({
-    error: 'Something went wrong!',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-  });
+  res.status(500).json({ error: 'Something went wrong!', message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error' });
 });
 
-// 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
 const PORT = process.env.PORT || 3001;
-
-// Para desarrollo local
 if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`🔥 RebelsRev API running on port ${PORT}`);
-  });
+  app.listen(PORT, () => console.log(`🔥 RebelsRev API running on port ${PORT}`));
 }
 
 module.exports = app;
