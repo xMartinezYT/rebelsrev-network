@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 const { initializeDatabase } = require('./utils/database');
 
 // Routes
-app.use('/api/auth', require('./api/auth'));
+app.use('/api/auth', require('./middleware/auth'));
 app.use('/api/affiliates', require('./api/affiliates'));
 app.use('/api/campaigns', require('./api/campaigns'));
 app.use('/api/tracking', require('./api/tracking'));
@@ -101,5 +101,6 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`🔥 RebelsRev API running on port ${PORT}`);
   });
 }
+
 
 module.exports = app;
