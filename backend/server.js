@@ -29,16 +29,20 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware de autenticación (token JWT, etc) - se usa global o en rutas específicas
+// Middleware de autenticación (token JWT, etc) - definido y aplicado solo donde es necesario
 const authenticateToken = require('./middleware/auth');
-app.use(authenticateToken); // aplica middleware globalmente (ajusta si no quieres eso)
 
 // Rutas API
-app.use('/api/auth', require('./api/auth'));             // Rutas de login, registro etc
+// Ruta pública (login, registro)
+app.use('/api/auth', require('./api/auth'));
+
+// Rutas protegidas con middleware de autenticación
 app.use('/api/affiliates', authenticateToken, require('./api/affiliates'));
 app.use('/api/campaigns', authenticateToken, require('./api/campaigns'));
-app.use('/api/tracking', require('./api/tracking'));     // Tracking puede ser público, sin JWT
 app.use('/api/stats', authenticateToken, require('./api/stats'));
+
+// Ruta pública para tracking
+app.use('/api/tracking', require('./api/tracking'));
 
 // Migration and seed endpoints (para setup inicial)
 const { initializeDatabase, seedDatabase } = require('./utils/database');
@@ -65,10 +69,10 @@ app.get('/api/seed', async (req, res) => {
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     message: '🔥 RebelsRev API is running!',
-    timestamp: new Date().toISOString() 
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -84,7 +88,7 @@ app.get('/', (req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Something went wrong!',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
   });
