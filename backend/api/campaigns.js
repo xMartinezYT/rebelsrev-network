@@ -20,7 +20,6 @@ router.get('/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const campaign = await Campaign.findByPk(id);
-
     if (!campaign) {
       return res.status(404).json({ error: 'Campaign not found' });
     }
